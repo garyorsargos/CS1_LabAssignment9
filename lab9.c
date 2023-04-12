@@ -11,13 +11,15 @@ struct RecordType
 // Fill out this structure
 struct HashType
 {
-
+	struct RecordType record;
+	struct HashType *next;
+	int empty;
 };
 
 // Compute the hash function
 int hash(int x)
 {
-
+	
 }
 
 // parses input file to an integer array
@@ -76,10 +78,16 @@ void printRecords(struct RecordType pData[], int dataSz)
 void displayRecordsInHash(struct HashType *pHashArray, int hashSz)
 {
 	int i;
-
+	printf("\nPrinting Records from Hash Table:\n");
 	for (i=0;i<hashSz;++i)
 	{
-		// if index is occupied with any records, print all
+		if(pHashArray[i].empty != 1)
+			printf("%d, %s, %d\n", pHashArray[i].record.id, pHashArray[i].record.name, pHashArray[i].record.order);
+		struct HashType *nextRecord = pHashArray[i].next;
+		while(nextRecord != NULL){
+			printf("%d, %s, %d\n", nextRecord->record.id, nextRecord->record.name, nextRecord->record.order);
+			nextRecord = nextRecord->next;
+		}
 	}
 }
 
@@ -90,5 +98,7 @@ int main(void)
 
 	recordSz = parseData("input.txt", &pRecords);
 	printRecords(pRecords, recordSz);
-	// Your hash implementation
+	for(int i = 0; i < recordSz; i++){
+
+	}
 }
