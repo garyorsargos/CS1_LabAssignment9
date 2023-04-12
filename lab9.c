@@ -19,7 +19,13 @@ struct HashType
 // Compute the hash function
 int hash(int x)
 {
-	
+	int hashVal = 0;
+	hashVal += x%10;
+	hashVal += (x%100)/10;
+	hashVal += (x%1000)/100;
+	hashVal += (x%10000)/1000;
+	hashVal += x/10000;
+	return hashVal;
 }
 
 // parses input file to an integer array
@@ -98,7 +104,10 @@ int main(void)
 
 	recordSz = parseData("input.txt", &pRecords);
 	printRecords(pRecords, recordSz);
+	struct HashType hashArr[46];
+	for(int i = 0; i < 46; i++)
+		hashArr[i].empty = 1;
 	for(int i = 0; i < recordSz; i++){
-
+		
 	}
 }
