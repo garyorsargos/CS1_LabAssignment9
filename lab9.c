@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 // RecordType
 struct RecordType
 {
@@ -19,12 +19,7 @@ struct HashType
 // Compute the hash function
 int hash(int x)
 {
-	int hashVal = 0;
-	hashVal += x%10;
-	hashVal += (x%100)/10;
-	hashVal += (x%1000)/100;
-	hashVal += (x%10000)/1000;
-	hashVal += x/10000;
+	int hashVal = x%11;
 	return hashVal;
 }
 
@@ -84,16 +79,19 @@ void printRecords(struct RecordType pData[], int dataSz)
 void displayRecordsInHash(struct HashType *pHashArray, int hashSz)
 {
 	int i;
-	printf("\nPrinting Records from Hash Table:\n");
+	printf("\nHash Table:\n");
 	for (i=0;i<hashSz;++i)
 	{
+		printf("Index %d -> ", i);
 		if(pHashArray[i].empty != 1)
-			printf("%d, %s, %d\n", pHashArray[i].record.id, pHashArray[i].record.name, pHashArray[i].record.order);
+			printf("%d, %c, %d", pHashArray[i].record.id, pHashArray[i].record.name, pHashArray[i].record.order);
 		struct HashType *nextRecord = pHashArray[i].next;
 		while(nextRecord != NULL){
-			printf("%d, %s, %d\n", nextRecord->record.id, nextRecord->record.name, nextRecord->record.order);
+			printf(" -> %d, %c, %d", nextRecord->record.id, nextRecord->record.name, nextRecord->record.order);
 			nextRecord = nextRecord->next;
 		}
+		printf(" -> NULL");
+		printf("\n");
 	}
 }
 
@@ -104,10 +102,31 @@ int main(void)
 
 	recordSz = parseData("input.txt", &pRecords);
 	printRecords(pRecords, recordSz);
-	struct HashType hashArr[46];
-	for(int i = 0; i < 46; i++)
+	struct HashType hashArr[11];
+	int hashSize = 11;
+	int hashVal;
+	for(int i = 0; i < 46; i++){
 		hashArr[i].empty = 1;
-	for(int i = 0; i < recordSz; i++){
-		
+		hashArr[i].next = NULL;
 	}
+	for(int i = 0; i < recordSz; i++){
+		hashVal = hash(pRecords[i].id);
+		if(hashArr[hashVal].empty != 1){
+			struct HashType *node = &hashArr[i];
+			while(node->next != NULL)
+				node = node->next;
+			node->next = (struct HashType*)malloc(sizeof(struct HashType));
+			node = node->next;
+			node->empty = 0;
+			node->record.id = pRecords[i].id;
+			node->record.name = pRecords[i].name;
+			node->record.order = pRecords[i].order;
+			continue;
+		}
+		hashArr[hashVal].empty = 0;
+		hashArr[hashVal].record.id = pRecords[i].id;
+		hashArr[hashVal].record.name = pRecords[i].name;
+		hashArr[hashVal].record.order = pRecords[i].order;
+	}
+	displayRecordsInHash(hashArr, hashSize);
 }
