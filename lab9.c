@@ -79,7 +79,7 @@ void printRecords(struct RecordType pData[], int dataSz)
 void displayRecordsInHash(struct HashType *pHashArray, int hashSz)
 {
 	int i;
-	printf("\nHash Table:\n");
+	printf("Hash Table:\n");
 	for (i=0;i<hashSz;++i)
 	{
 		printf("Index %d -> ", i);
@@ -105,14 +105,14 @@ int main(void)
 	struct HashType hashArr[11];
 	int hashSize = 11;
 	int hashVal;
-	for(int i = 0; i < 46; i++){
+	for(int i = 0; i < 11; i++){
 		hashArr[i].empty = 1;
 		hashArr[i].next = NULL;
 	}
 	for(int i = 0; i < recordSz; i++){
 		hashVal = hash(pRecords[i].id);
 		if(hashArr[hashVal].empty != 1){
-			struct HashType *node = &hashArr[i];
+			struct HashType *node = &hashArr[hashVal];
 			while(node->next != NULL)
 				node = node->next;
 			node->next = (struct HashType*)malloc(sizeof(struct HashType));
@@ -121,6 +121,7 @@ int main(void)
 			node->record.id = pRecords[i].id;
 			node->record.name = pRecords[i].name;
 			node->record.order = pRecords[i].order;
+			node->next = NULL;
 			continue;
 		}
 		hashArr[hashVal].empty = 0;
